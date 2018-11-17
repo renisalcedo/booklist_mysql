@@ -2,6 +2,7 @@ class Book:
     def __init__(self, db):
         self.db = db
         self.table = 'Books'
+        self.cursor = db.cursor()
 
     def new(self, title, author, desc):
         """ Adds a new book to the database
@@ -16,7 +17,7 @@ class Book:
         sql = "INSERT INTO {0[0]} ({0[1]}, {0[2]}, {0[3]}) \
                VALUES (\"{1[0]}\", \"{1[1]}\", \"{1[2]}\")"
 
-        db_cursor.execute(sql.format(db_props, req_body))
+        self.cursor.execute(sql.format(db_props, req_body))
 
     def get_by_id(self, id):
         """ Finds a Book by the id in the database
@@ -25,8 +26,8 @@ class Book:
         """
         sql = "SELECT * FROM {} WHERE id = {}"
 
-        db_cursor.execute(sql.format(self.table, id))
-        data = db_cursor.fetchall()
+        self.cursor.execute(sql.format(self.table, id))
+        data = self.cursor.fetchall()
 
         if data:
             _,title,author,desc = data[0]
@@ -47,7 +48,7 @@ class Book:
             sql = 'UPDATE {0[0]} SET {0[1]} = {2[0]}, \
                   {0[2]} = {2[1]}, {0[3]} = {2[2]} WHERE ID = {1[1]}'
 
-            db_cursor.execute(sql.format(db_props, id, data))
+            self.cursor.execute(sql.format(db_props, id, data))
             return {'res': 'The record of the book was updated.'}
 
         return {'Error': 'There was no book with the given id.'}
@@ -61,7 +62,7 @@ class Book:
 
         if data:
             sql = "DELETE FROM {0} WHERE id = {1}"
-            db_cursor.execute(sql.format(self.table, id))
+            self.cursor.execute(sql.format(self.table, id))
             return {'res': 'The record of the book was deleted.'}
 
         return {'Error': 'There was no book with the given id.'}

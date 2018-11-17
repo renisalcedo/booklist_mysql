@@ -3,8 +3,6 @@ from db.db import connectdb
 # Will initialize the database Connection
 db = connectdb()
 db_cursor = db.cursor()
-db_name = 'Booklist'
-db_table = 'Books'
 
 # Column Names
 db_props = (db_table, "title", "author", "description")
